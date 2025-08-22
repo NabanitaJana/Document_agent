@@ -1,0 +1,63 @@
+server:
+  port: ${PORT:8888}
+  servlet:
+    context-path: /document
+  forward-headers-strategy: framework
+  max-http-request-header-size: 10MB
+
+spring:
+  application:
+    name: document-agent
+
+  threads:
+    virtual:
+      enabled: true
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/doc_ai?currentSchema=docagent
+    username: postgres
+    password: admin
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      allow-pool-suspension: true
+      connection-timeout: 30000
+      idle-timeout: 6000
+      max-lifetime: 1800
+      leak-detection-threshold: 20000
+      pool-name: DocumentAgentHikariCP
+      maximum-pool-size: 5
+      minimum-idle: 2
+
+  jpa:
+    generate-ddl: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  main:
+    allow-circular-references: true
+    allow-bean-definition-overriding: true
+
+  cloud:
+    compatibility-verifier:
+      enabled: false
+
+# Gemini AI Configuration (Gemini API Key + Model)
+gemini:
+  api-key: AIzaSyBfTKQXCLRqBB3xfH28_3yaZyPHTfqCdSg
+  model: gemini-2.5-flash-latest
+
+# Optional: OCR settings if you use local Tesseract config
+tesseract:
+  datapath: tessdata  # path to tessdata folder (if needed)
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%t] [${spring.application.name:-}] - %msg%n"
